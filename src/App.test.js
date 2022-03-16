@@ -20,14 +20,15 @@ describe("App component", () => {
     jest.clearAllMocks();
   });
 
+
   it("Display element check", () => {
     const personal = [
       {
         name: "Sample",
         mobile: "1234567890",
-        address: "a a a",
+        addrs: "a a a",
         city: "Chennai",
-        states: "Tamil Nadu",
+        state: "Tamil Nadu",
         zip: "123456",
         type: "Present",
       },
@@ -36,9 +37,9 @@ describe("App component", () => {
       {
         name: "cool",
         mobile: "1234567890",
-        address: "a a a",
+        addrs: "a a a",
         city: "Chennai",
-        states: "Tamil Nadu",
+        state: "Tamil Nadu",
         zip: "123456",
         type: "Both",
       }
@@ -50,35 +51,12 @@ describe("App component", () => {
     expect(component.find(".App-header")).toHaveLength(1);
     expect(component.find("h2").text()).toBe("Address Book");
     expect(component.find("table")).toHaveLength(1);
-    expect(
-      component.find("table").find("tbody").find(".buttons").find("th").at(0)
-    ).toHaveLength(1);
-    expect(
-      component
-        .find("table")
-        .find("tbody")
-        .find(".buttons")
-        .find("th")
-        .at(0)
-        .text()
-    ).toBe("Personal");
-    let personal_click = component
-      .find("table")
-      .find("tbody")
-      .find(".buttons")
-      .find("th")
-      .at(0);
+    expect(component.find("table").find("tbody").find(".buttons").find("th").at(0)).toHaveLength(1);
+    expect(component.find("table").find("tbody").find(".buttons").find("th").at(0).text()).toBe("Personal");
+    let personal_click = component.find("table").find("tbody").find(".buttons").find("th").at(0);
     personal_click.simulate("click");
     expect(component.state().show_personal).toBe(true);
-    expect(
-      component
-        .find("table")
-        .find("tbody")
-        .find(".buttons")
-        .find("th")
-        .at(1)
-        .text()
-    ).toBe("Business");
+    expect(component.find("table").find("tbody").find(".buttons").find("th").at(1).text()).toBe("Business");
     let business_click = component
       .find("table")
       .find("tbody")
@@ -87,6 +65,7 @@ describe("App component", () => {
       .at(1);
     business_click.simulate("click");
     expect(component.state().show_personal).toBe(false);
+
     expect(
       component
         .find("table")
@@ -156,9 +135,7 @@ describe("App component", () => {
         .find("td")
         .at(6)
         .text()
-    ).toBe("Pesent/Perment Address");
-
-    //bussiness map check
+    ).toBe("Present/Permanent Address");
 
     expect(
       component
@@ -236,8 +213,6 @@ describe("App component", () => {
       "No business records to display"
     );
 
-    //personal map check
-
     personal_click.simulate("click");
     expect(
       component
@@ -314,14 +289,13 @@ describe("App component", () => {
     expect(component.find("table").find("tbody").find("h3").text()).toBe(
       "No personal recordes to display"
     );
-
   });
 
   it("Add button and model Check", () => {
     const add = component.find(".add");
     add.simulate("click");
     expect(component.state().show).toBe(true);
-    expect(component.find("Model")).toHaveLength(1);
+    expect(component.find("Modal")).toHaveLength(1);
     expect(component.find(".bg")).toHaveLength(1);
     expect(component.find(".pop")).toHaveLength(1);
     expect(component.find("h3").at(0).text()).toBe("Fill Address Details");
@@ -338,14 +312,13 @@ describe("App component", () => {
       .simulate("change", { target: { name: "checked", value: "Business" } });
     expect(component.state().checked).toBe("Business");
 
-    //proper value check
-
     component
       .find(".fields")
       .find("input")
       .at(0)
       .simulate("change", { target: { name: "name", value: "sample" } });
     expect(component.state().name).toBe("sample");
+
     component
       .find(".fields")
       .find("input")
@@ -365,44 +338,49 @@ describe("App component", () => {
       .at(2)
       .simulate("change", { target: { name: "city", value: "sample city" } });
     expect(component.state().city).toBe("sample city");
+
+    // states -> state
     component
       .find(".fields")
       .find("input")
       .at(3)
-      .simulate("change", { target: { name: "states", value: "sample states" } });
-    expect(component.state().city).toBe("sample states");
+      .simulate("change", { target: { name: "state", value: "sample states" } });
+    expect(component.state().state).toBe("sample states");
     component
       .find(".fields")
       .find("input")
       .at(4)
       .simulate("change", { target: { name: "zip", value: "123456" } });
     expect(component.state().zip).toBe("123456");
+
+    //.type ->.checked
     component
       .find(".radios")
       .find("input")
       .at(0)
-      .simulate("change", { target: { name: "checked", value: "Present" } });
+      .simulate("change", { target: { name: "type", value: "Present" } });
     expect(component.state().type).toBe("Present");
     component
       .find(".radios")
       .find("input")
       .at(1)
-      .simulate("change", { target: { name: "checked", value: "Permanent" } });
+      .simulate("change", { target: { name: "type", value: "Permanent" } });
     expect(component.state().type).toBe("Permanent");
     component
       .find(".radios")
       .find("input")
       .at(2)
-      .simulate("change", { target: { name: "checked", value: "Both" } });
+      .simulate("change", { target: { name: "type", value: "Both" } });
     expect(component.state().type).toBe("Both");
 
-    //validation check
+
     component
       .find(".fields")
       .find("input")
       .at(0)
       .simulate("change", { target: { name: "name", value: "" } });
     expect(component.state().name_error).toBe("Please enter a value");
+
     component
       .find(".fields")
       .find("input")
@@ -432,6 +410,7 @@ describe("App component", () => {
     expect(component.state().mobile_error).toBe(
       "Please enter a valid 10 digit mobile number"
     );
+
 
     component
       .find(".fields")
@@ -465,14 +444,14 @@ describe("App component", () => {
       .find(".fields")
       .find("input")
       .at(3)
-      .simulate("change", { target: { name: "states", value: "" } });
-    expect(component.state().states_error).toBe("Please enter a value");
+      .simulate("change", { target: { name: "state", value: "" } });
+    expect(component.state().state_error).toBe("Please enter a value");
     component
       .find(".fields")
       .find("input")
       .at(3)
-      .simulate("change", { target: { name: "states", value: "5" } });
-    expect(component.state().states_error).toBe(
+      .simulate("change", { target: { name: "state", value: "5" } });
+    expect(component.state().state_error).toBe(
       "Characters from a-z/A-Z allowed"
     );
 
@@ -495,26 +474,24 @@ describe("App component", () => {
       .simulate("change", { target: { name: "zip", value: "123456789" } });
     expect(component.state().zip_error).toBe("Please enter a digit zip pin");
 
-    //clear
+    //states -> state
 
     const clear = component.find(".clear");
     clear.simulate("click");
     expect(component.state().name).toBe("");
-    expect(component.state().name_error).toBe("");
     expect(component.state().mobile).toBe("");
-    expect(component.state().mobile_error).toBe("");
     expect(component.state().addrs).toBe("");
-    expect(component.state().addrs_error).toBe("");
-    expect(component.state().states).toBe("");
-    expect(component.state().states_error).toBe("");
+    expect(component.state().state).toBe("");
     expect(component.state().city).toBe("");
-    expect(component.state().city_error).toBe("");
     expect(component.state().zip).toBe("");
-    expect(component.state().zip_error).toBe("");
     expect(component.state().checked).toBe("");
     expect(component.state().type).toBe("");
-
-    //add
+    expect(component.state().name_error).toBe("");
+    expect(component.state().mobile_error).toBe("");
+    expect(component.state().addrs_error).toBe("");
+    expect(component.state().states_error).toBe("");
+    expect(component.state().city_error).toBe("");
+    expect(component.state().zip_error).toBe("");
 
     component.instance().setState({
       checked: "Business",
@@ -522,7 +499,7 @@ describe("App component", () => {
       mobile: "123456",
       addrs: "a aa aaa",
       city: "sample",
-      states: "sample",
+      state: "sample",
       type: "Present",
       zip: "2222",
       name_error: "",
@@ -573,7 +550,7 @@ describe("App component", () => {
     expect(component.state().mobile_error).toBe("");
     expect(component.state().addrs).toBe("");
     expect(component.state().addrs_error).toBe("");
-    expect(component.state().states).toBe("");
+    expect(component.state().state).toBe("");
     expect(component.state().states_error).toBe("");
     expect(component.state().city).toBe("");
     expect(component.state().city_error).toBe("");
@@ -582,7 +559,7 @@ describe("App component", () => {
     expect(component.state().checked).toBe("");
     expect(component.state().type).toBe("");
   });
-
+  
   it("Modal component check", () => {
     expect(wrapper.find("div").at(0)).toHaveLength(1);
     expect(wrapper.find("div").at(1)).toHaveLength(1);

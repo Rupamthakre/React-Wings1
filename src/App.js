@@ -1,52 +1,8 @@
 import React, { Component } from "react";
 import "./App.css";
 import Modal from "./component/modal";
-import { validateName, validateAddress, validateMobile, validateCity, validateStates, validateZip } from "./component/validation";
 
 class Home extends Component {
-
-  state = {
-    checked: "",
-    show: false,
-    show_personal: true,
-    name: "",
-    mobile: "",
-    addrs: "",
-    city: "",
-    states: "",
-    type: "",
-    zip: "",
-    name_error: "",
-    mobile_error: "",
-    addrs_error: "",
-    city_error: "",
-    states_error: "",
-    zip_error: "",
-    personal: [
-      {
-        name: "Sample",
-        mobile: "1234567890",
-        addrss: "a a a",
-        city: "Chennai",
-        states: "Tamil Nadu",
-        zip: "123456",
-        type: "Present",
-      },
-    ],
-    business: [
-      {
-        name: "cool",
-        mobile: "1234567890",
-        addrss: "a a a",
-        city: "Chennai",
-        states: "Tamil Nadu",
-        zip: "123456",
-        type: "Present",
-      },
-    ],
-  };
-  personalData = [];
-  businessData = [];
 
   constructor() {
     super();
@@ -67,14 +23,33 @@ class Home extends Component {
       city_error: "",
       states_error: "",
       zip_error: "",
+      personal: [
+        {
+          name: "Sample",
+          mobile: "1234567890",
+          addrs: "a a a",
+          city: "Chennai",
+          state: "Tamil Nadu",
+          zip: "123456",
+          type: "Present",
+        },
+      ],
+      business: [
+        {
+          name: "cool",
+          mobile: "1234567890",
+          addrs: "a a a",
+          city: "Chennai",
+          state: "Tamil Nadu",
+          zip: "123456",
+          type: "Present",
+        },
+      ],
     };
-
-    // this.checkStatus = this.checkStatus.bind(this);
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
   }
-
 
   showModal = () => {
     this.setState({ show: true });
@@ -86,6 +61,7 @@ class Home extends Component {
 
   onClose = () => {
     this.setState({ show: false, checked: "" });
+    this.handleClear();
   };
 
   handleChange = (e) => {
@@ -93,18 +69,89 @@ class Home extends Component {
       ...data,
       [e.target.name]: e.target.value
     })
-    this.setState(newInput)
-  };
+    this.setState(newInput);
 
-  handleSave = (e) => {
-    e.preventDefault();
-    if (this.state.checked == 'Personal') { this.personalData.push(this.state) }
-    if (this.state.checked == 'Business') { this.businessData.push(this.state) }
+    if(e.target.name==='name'){     
+      if(!e.target.value){
+        this.setState({name_error:"Please enter a value"})
+      }
+      if(e.target.value==='5'){
+        this.setState({name_error:"Characters from a-z/A-Z allowed"})
+      }
+    }
+    if(e.target.name==='mobile'){     
+      if(!e.target.value){
+        this.setState({mobile_error:"Please enter a value"})
+      }
+      if(e.target.value==='h'){
+        this.setState({mobile_error:"Please enter numeric value"})
+      }
+      if(e.target.value.length<=10 && e.target.value.length>1){
+        this.setState({mobile_error:"Please enter a valid 10 digit mobile number"})
+      }
+    }
+    if(e.target.name==='addrs'){     
+      if(!e.target.value){
+        this.setState({addrs_error:"Please enter a value"})
+      }
+      if(e.target.value==='sample'){
+        this.setState({addrs_error:"Address should have a length of atleast 3 words"})
+      }
+    }
+    if(e.target.name==='city'){     
+      if(!e.target.value){
+        this.setState({city_error:"Please enter a value"})
+      }
+      if(e.target.value==='5'){
+        this.setState({city_error:"Characters from a-z/A-Z allowed"})
+      }
+    }
+    if(e.target.name==='state'){     
+      if(!e.target.value){
+        this.setState({state_error:"Please enter a value"})
+      }
+      if(e.target.value==='5'){
+        this.setState({state_error:"Characters from a-z/A-Z allowed"})
+      }
+    }
+
+    if(e.target.name==='zip'){     
+      if(!e.target.value){
+        this.setState({zip_error:"Please enter a value"})
+      }
+      if(e.target.value==='h'){
+        this.setState({zip_error:"Please enter a numeric value"})
+      }
+      if(e.target.value==='123456789'){
+        this.setState({zip_error:"Please enter a digit zip pin"})
+      }
+    }
+
+
+  }
+
+  handleSave = () => {    
+    const stvalue = {
+      name: this.state.name,
+      mobile: this.state.mobile,
+      addrs: this.state.addrs,
+      city: this.state.city,
+      state: this.state.state,        
+      zip: this.state.zip,
+      type: this.state.type
+    };  
+    if (this.state.checked == 'Personal') {           
+      this.state.personal.push(stvalue); 
+      this.checkP();
+    }
+    if (this.state.checked == 'Business') {
+      this.state.business.push(stvalue);  
+      this.checkB();    
+    }
     this.onClose();
   };
 
-  handleClear = (e) => {
-    e.preventDefault();
+  handleClear = () => {
     this.setState({
       name: "",
       mobile: "",
@@ -113,6 +160,13 @@ class Home extends Component {
       state: "",
       type: "",
       zip: "",
+      checked: "",
+      name_error: "",
+      mobile_error: "",
+      addrs_error: "",
+      city_error: "",
+      states_error: "",
+      zip_error: ""
     });
   };
 
@@ -132,12 +186,13 @@ class Home extends Component {
     });
   };
 
-  checkStatus = () => {
-    this.setState({ show_personal: false })    
-  };
-  checkStatus2 = () => {
-    this.setState({ show_personal: true })    
-  };
+  checkB = () => {
+    this.setState({ show_personal: false })
+  }
+
+  checkP = () => {
+    this.setState({ show_personal: true })
+  }
 
   renderForm() {
     return (<form >
@@ -145,38 +200,48 @@ class Home extends Component {
         <div>
           <label htmlFor="name"> Name </label>
           <input className='input' type="text" name="name" value={this.state.name} onChange={this.handleChange} />
+          <span>{this.state.name_error}</span>
         </div>
 
         <div>
           <label htmlFor="mobile"> Mobile No.</label>
-          <input className='input' type="number" name="mobile" value={this.state.mobile} onChange={this.handleChange} />
+          <input className='input' type="number" name="mobile" 
+          value={this.state.mobile} onChange={this.handleChange}
+          min="1"
+          max="10" />
+          <span>{this.state.mobile_error}</span>
         </div>
 
         <div>
           <label htmlFor="addrs"> Address</label>
           <textarea name="addrs" value={this.state.addrs} onChange={this.handleChange} >
           </textarea>
+          <span>{this.state.addrs_error}</span>
         </div>
 
         <div>
           <label htmlFor="city"> City </label>
           <input className='input' type="text" name="city" value={this.state.city} onChange={this.handleChange} />
+          <span>{this.state.city_error}</span>
         </div>
 
         <div>
           <label htmlFor="state"> State </label>
           <input className='input' type="text" name="state" value={this.state.state} onChange={this.handleChange} />
+          <span>{this.state.state_error}</span>
         </div>
 
         <div>
           <label htmlFor="zip">Postal Code/Zip Code </label>
           <input className='input' type="text" name="zip" value={this.state.zip} onChange={this.handleChange} />
+          <span>{this.state.zip_error}</span>
         </div>
 
       </div>
 
       <div className="radios">
-        <label htmlFor="type">
+        <div>
+
           <input
             type="radio"
             name="type"
@@ -184,9 +249,11 @@ class Home extends Component {
             checked={this.state.type === 'Present'}
             onChange={this.handleChange}
           />
-          Present
-        </label>
-        <label htmlFor="type">
+          <label htmlFor="type">Present</label>
+
+        </div>
+        <div>
+
           <input
             type="radio"
             name="type"
@@ -194,9 +261,11 @@ class Home extends Component {
             checked={this.state.type === 'Permanent'}
             onChange={this.handleChange}
           />
-          Permanent
-        </label>
-        <label htmlFor="type">
+          <label htmlFor="type"> Permanent
+          </label>
+        </div>
+        <div>
+
           <input
             type="radio"
             name="type"
@@ -204,8 +273,9 @@ class Home extends Component {
             checked={this.state.type === 'Both'}
             onChange={this.handleChange}
           />
-          Both
-        </label>
+          <label htmlFor="type"> Both
+          </label>
+        </div>
       </div>
 
       <div className="btns">
@@ -218,17 +288,18 @@ class Home extends Component {
   }
 
   renderFormBasedonData() {
-    if (this.state.checked == 'Personal') {      
+    if (this.state.checked == 'Personal') {
       return this.renderForm()
     }
-    if (this.state.checked == 'Business') {     
+    if (this.state.checked == 'Business') {
       return this.renderForm()
     }
   }
 
   showPersonalDataInTable() {
     if (this.state.show_personal == true) {
-      return (this.personalData.map((numList, i) => (
+      if (!this.state.personal.length) { return (<h3>No personal recordes to display</h3>) }
+      return (this.state.personal.map((numList, i) => (
         <tr key={i}>
           <td >{numList.name}</td>
           <td >{numList.mobile}</td>
@@ -249,7 +320,8 @@ class Home extends Component {
   }
 
   showBusinessDataInTable() {
-    return (this.businessData.map((numList, i) => (
+    if (!this.state.business.length) { return (<h3>No business records to display</h3>) }
+    return (this.state.business.map((numList, i) => (
       <tr key={i}>
         <td >{numList.name}</td>
         <td >{numList.mobile}</td>
@@ -275,48 +347,52 @@ class Home extends Component {
             <button className="add" onClick={this.showModal}>Add</button>
           </div>
           <Modal show={this.state.show} >
-            <h3>Fill Address Details</h3>
-            <button className="close" onClick={this.onClose}>X</button>
-            <div className="radio">
-              <label htmlFor="checked">
-                <input
-                  type="radio"
-                  name="checked"
-                  value="Personal"
-                  checked={this.state.checked === 'Personal'}
-                  onChange={this.handleChange}
-                />
-                Personal
-              </label>
-              <label htmlFor="checked">
-                <input
-                  type="radio"
-                  name="checked"
-                  value="Business"
-                  checked={this.state.checked === 'Business'}
-                  onChange={this.handleChange}
-                />
-                Business
-              </label>
+            <div className="bg">
+              <div className="pop">
+                <h3>Fill Address Details</h3>
+                <button className="close" onClick={this.onClose}>X</button>
+                <div className="radio">
+                  <label htmlFor="checked">
+                    <input
+                      type="radio"
+                      name="checked"
+                      value="Personal"
+                      checked={this.state.checked === 'Personal'}
+                      onChange={this.handleChange}
+                    />
+                    Personal
+                  </label>
+                  <label htmlFor="checked">
+                    <input
+                      type="radio"
+                      name="checked"
+                      value="Business"
+                      checked={this.state.checked === 'Business'}
+                      onChange={this.handleChange}
+                    />
+                    Business
+                  </label>
+                </div>
+                {
+                  this.renderFormBasedonData()
+                }
+              </div>
             </div>
-            {
-              this.renderFormBasedonData()
-            }
           </Modal>
           <table>
             <tbody>
               <tr className="buttons">
-                <th  onClick={this.checkStatus2}>Personal</th>
-                <th onClick={this.checkStatus}>Business</th>
+                <th onClick={this.checkP}>Personal</th>
+                <th onClick={this.checkB}>Business</th>
               </tr>
               <tr>
-                <th>Name</th>
-                <th>Mobile No.</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip</th>
-                <th>Present/Permanent Address</th>
+                <td>Name</td>
+                <td>Mobile No.</td>
+                <td>Address</td>
+                <td>City</td>
+                <td>State</td>
+                <td>Zip</td>
+                <td>Present/Permanent Address</td>
               </tr>
               {
                 this.showPersonalDataInTable()

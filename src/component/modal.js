@@ -2,16 +2,22 @@ import React, { Component } from 'react'
 
 class Modal extends Component {
 
-    render() {      
-        
-        if(!this.props.show){
-            return null;
-         }
-        
+    render() {
+
+        if (!this.props.show) {
+            return (
+                <div>
+                    <div>
+
+                    </div>
+                </div>
+            )
+        }
+
         return (
-            <div className='bg'>
-                <div className='pop'>                                  
-                    {this.props.children}
+            <div>
+                <div>
+                    {this.props.children}                    
                 </div>
             </div>
         )
